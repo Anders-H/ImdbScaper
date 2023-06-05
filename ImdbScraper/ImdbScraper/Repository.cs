@@ -10,7 +10,7 @@ public class Repository
     {
         if (IsCached(imdbId))
         {
-            var cached = (GetMovieResult)Cache[imdbId];
+            var cached = (GetMovieResult)Cache[imdbId]!;
             
             if (cached.IsOk)
             {
@@ -23,23 +23,17 @@ public class Repository
         var downloadResult = s.Download(imdbId);
 
         if (!downloadResult.InfrastructureSuccess)
-            return new GetMovieResult(imdbId) { GetMovieResultStatus = GetMovieResultStatus.InfrastructureError };
+            return GetMovieResult.InfrastructureError(imdbId);
         
         if (!downloadResult.GrabSuccess)
-            return new GetMovieResult(imdbId) { GetMovieResultStatus = GetMovieResultStatus.GrabError };
+            return GetMovieResult.GrabError(imdbId);
         
         var scrapeResult = s.Scrape(downloadResult.Html);
         
         if (!scrapeResult.Success)
-            return new GetMovieResult(imdbId) { GetMovieResultStatus = GetMovieResultStatus.ScrapeError };
-        
-        var result = new GetMovieResult(imdbId)
-        {
-            GetMovieResultStatus = GetMovieResultStatus.FromSource,
-            OriginalTitle = scrapeResult.OriginalTitle,
-            RegionalTitle = scrapeResult.RegionalTitle,
-            Year = scrapeResult.Year
-        };
+            return GetMovieResult.ScrapeError(imdbId);
+
+        var result = GetMovieResult.FromSource(imdbId, scrapeResult.OriginalTitle, scrapeResult.RegionalTitle, scrapeResult.Year);
         
         Cache.Add(imdbId, result);
 

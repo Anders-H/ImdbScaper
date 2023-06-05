@@ -29,8 +29,8 @@ public class Scraper
             result.InfrastructureSuccess = true;
             
             result.GrabSuccess = !string.IsNullOrEmpty(result.Html)
-                                 && result.Html.Length > 10000
-                                 && result.Html.IndexOf(" - IMDb</title>", StringComparison.Ordinal) > 0;
+                && result.Html.Length > 10000
+                && result.Html.IndexOf(" - IMDb</title>", StringComparison.Ordinal) > 0;
         }
         catch (Exception e)
         {
@@ -57,6 +57,18 @@ public class Scraper
 {regionalTitleHtml}");
 
         var regionalTitle = regionalTitleDom.DocumentElement?.ChildNodes[0]?.InnerText ?? "";
+
+        string originalTitle;
+        var originalTitleStart = html.IndexOf("Original title:", StringComparison.Ordinal);
+        if (originalTitleStart < 0)
+        {
+            originalTitle = regionalTitle;
+        }
+        else
+        {
+            originalTitle = html.Substring(originalTitleStart);
+            
+        }
 
         return new ScrapeResult(true, regionalTitle, "", 0);
     }
