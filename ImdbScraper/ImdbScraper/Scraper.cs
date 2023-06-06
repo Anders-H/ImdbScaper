@@ -60,16 +60,20 @@ public class Scraper
 
         string originalTitle;
         var originalTitleStart = html.IndexOf("Original title:", StringComparison.Ordinal);
+        
         if (originalTitleStart < 0)
         {
             originalTitle = regionalTitle;
         }
         else
         {
-            originalTitle = html.Substring(originalTitleStart);
-            
+            originalTitle = html.Substring(originalTitleStart + 16);
+            var closingTag = originalTitle.IndexOf('<');
+
+            if (closingTag >= 0)
+                originalTitle = originalTitle.Substring(0, closingTag);
         }
 
-        return new ScrapeResult(true, regionalTitle, "", 0);
+        return new ScrapeResult(true, regionalTitle, originalTitle, 0);
     }
 }
