@@ -1,12 +1,12 @@
 ﻿using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace ImdbScraper;
 
 public class Scraper
 {
+    private const string JsonStartTag = "<script type=\"application/ld+json\">";
+
     public DownloadResult Download(uint imdbId)
     {
         var url = $@"https://www.imdb.com/title/tt{imdbId:0000000}/";
@@ -30,7 +30,7 @@ public class Scraper
             
             result.GrabSuccess = !string.IsNullOrEmpty(result.Html)
                 && result.Html.Length > 10000
-                && result.Html.IndexOf(" - IMDb</title>", StringComparison.Ordinal) > 0;
+                && result.Html.IndexOf(JsonStartTag, StringComparison.Ordinal) > 0;
         }
         catch (Exception e)
         {
@@ -43,37 +43,31 @@ public class Scraper
 
     public ScrapeResult Scrape(string html)
     {
-        var regionalTitleStart = html.IndexOf("<h1 ", StringComparison.Ordinal);
-        var regionalTitleEnd = html.IndexOf("</h1>", StringComparison.Ordinal);
-        var regionalTitleLength = regionalTitleEnd - regionalTitleStart + 5;
+        var startIndex = html.IndexOf(JsonStartTag, StringComparison.Ordinal);
 
-        if (regionalTitleLength < 0 || regionalTitleLength < 1)
-            return ScrapeResult.Fail();
+        html = html[(startIndex + JsonStartTag.Length)..];
 
-        var regionalTitleHtml = html.Substring(regionalTitleStart, regionalTitleLength);
+        var endIndex = html.IndexOf("</script>");
 
-        var regionalTitleDom = new XmlDocument();
-        regionalTitleDom.LoadXml($@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>
-{regionalTitleHtml}");
+        html = html.Substring(0, endIndex);
 
-        var regionalTitle = regionalTitleDom.DocumentElement?.ChildNodes[0]?.InnerText ?? "";
+        var rating = GetFloat("ratingValue");
 
-        string originalTitle;
-        var originalTitleStart = html.IndexOf("Original title:", StringComparison.Ordinal);
-        
-        if (originalTitleStart < 0)
+
+        return  new ScrapeResult(true, "", "", 0)
         {
-            originalTitle = regionalTitle;
-        }
-        else
-        {
-            originalTitle = html.Substring(originalTitleStart + 16);
-            var closingTag = originalTitle.IndexOf('<');
+            Rating = rating
+        };
+    }
 
-            if (closingTag >= 0)
-                originalTitle = originalTitle.Substring(0, closingTag);
-        }
+    private static float? GetFloat(string name)
+    {
+        var s = GetValue(name);
 
-        return new ScrapeResult(true, regionalTitle, originalTitle, 0);
+
+
+
+
+
     }
 }

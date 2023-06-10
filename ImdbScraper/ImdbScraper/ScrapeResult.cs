@@ -6,6 +6,7 @@ public class ScrapeResult
     public string RegionalTitle { get; internal set; }
     public string OriginalTitle { get; internal set; }
     public short? Year { get; internal set; }
+    public float? Rating { get; internal set; }
 
     public ScrapeResult(bool success, string regionalTitle, string originalTitle, short? year)
     {
@@ -13,6 +14,7 @@ public class ScrapeResult
         RegionalTitle = regionalTitle;
         OriginalTitle = originalTitle;
         Year = year;
+        Rating = null;
     }
 
     public static ScrapeResult Fail() =>
