@@ -3,6 +3,7 @@
 public class ScrapeResult
 {
     public bool Success { get; internal set; }
+    public DateTime? ScrapeDate { get; internal set; }
     public string RegionalTitle { get; internal set; }
     public string OriginalTitle { get; internal set; }
     public short? Year { get; internal set; }
@@ -11,6 +12,7 @@ public class ScrapeResult
     public ScrapeResult(bool success, string regionalTitle, string originalTitle, short? year)
     {
         Success = success;
+        ScrapeDate = null;
         RegionalTitle = regionalTitle;
         OriginalTitle = originalTitle;
         Year = year;

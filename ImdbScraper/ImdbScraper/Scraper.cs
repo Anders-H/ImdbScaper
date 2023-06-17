@@ -183,9 +183,25 @@ public class Scraper
         if (data.TryGetValue("datePublished", StringComparison.CurrentCultureIgnoreCase, out var datePublished))
             year = (short)datePublished.Value<DateTime>().Year;
 
-        return new ScrapeResult(true, regionalTitle, originalTitle, 0)
+        float? rating = null;
+
+        try
         {
-            //Rating = rating
+            var aggregateRating = data["aggregateRating"];
+            var ratingValue = (float?)aggregateRating?["ratingValue"] ?? null;
+
+            if (ratingValue != null)
+                rating = ratingValue.Value;
+        }
+        catch
+        {
+            // ignored
+        }
+
+        return new ScrapeResult(true, regionalTitle, originalTitle, year)
+        {
+            ScrapeDate = DateTime.Now,
+            Rating = rating
         };
     }
 }
