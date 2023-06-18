@@ -13,6 +13,7 @@
     <PackageReleaseNotes>Moved to .NET 7.0 and added rating.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Anders-H/ImdbScraper</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
