@@ -28,12 +28,12 @@ public class Repository
         if (!downloadResult.GrabSuccess)
             return GetMovieResult.GrabError(imdbId);
         
-        var scrapeResult = s.Scrape(downloadResult.Html);
+        var scrapeResult = s.Scrape(downloadResult.Html ?? "");
         
         if (!scrapeResult.Success)
             return GetMovieResult.ScrapeError(imdbId);
 
-        var result = GetMovieResult.FromSource(imdbId, scrapeResult.OriginalTitle, scrapeResult.RegionalTitle, scrapeResult.Year);
+        var result = GetMovieResult.FromSource(imdbId, scrapeResult.OriginalTitle, scrapeResult.RegionalTitle, scrapeResult.Year, scrapeResult.Rating, scrapeResult.Url, scrapeResult.ScrapeDate);
         
         Cache.Add(imdbId, result);
 

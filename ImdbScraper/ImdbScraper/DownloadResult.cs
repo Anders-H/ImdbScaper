@@ -6,8 +6,5 @@ public class DownloadResult
 
     public bool GrabSuccess { get; internal set; }
 
-    public string Html { get; internal set; }
-
-    public bool Success =>
-        InfrastructureSuccess && GrabSuccess;
+    public string? Html { get; internal set; }
 }
