@@ -57,11 +57,11 @@ public class Scraper
         if (!data.TryGetValue("name", StringComparison.InvariantCultureIgnoreCase, out var name))
             return ScrapeResult.Fail();
 
-        var originalTitle = name.Value<string>() ?? "";
-        var regionalTitle = "";
+        var regionalTitle = name.Value<string>() ?? "";
+        var originalTitle = "";
 
         if (data.TryGetValue("alternateName", StringComparison.InvariantCultureIgnoreCase, out var alternateName))
-            regionalTitle = alternateName.Value<string>() ?? "";
+            originalTitle = alternateName.Value<string>() ?? "";
 
         short year = 0;
         if (data.TryGetValue("datePublished", StringComparison.CurrentCultureIgnoreCase, out var datePublished))

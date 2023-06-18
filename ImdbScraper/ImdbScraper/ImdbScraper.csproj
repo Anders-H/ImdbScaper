@@ -4,7 +4,23 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>IMDb Scraper</Title>
+    <Description>IMDb Scraper is a simple .NET 7.0 library for extracting a movie title, rating and year from a IMDb ID.</Description>
+    <PackageProjectUrl>https://github.com/Anders-H/ImdbScraper</PackageProjectUrl>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageReleaseNotes>Moved to .NET 7.0 and added rating.</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/Anders-H/ImdbScraper</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
