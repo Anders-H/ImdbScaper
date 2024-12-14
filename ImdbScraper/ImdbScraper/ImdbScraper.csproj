@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title>IMDb Scraper</Title>
-    <Description>IMDb Scraper is a simple .NET 7.0 library for extracting a movie title, rating and year from a IMDb ID.</Description>
+    <Description>IMDb Scraper is a simple .NET library for extracting a movie title, rating and year from a IMDb ID.</Description>
     <PackageProjectUrl>https://github.com/Anders-H/ImdbScraper</PackageProjectUrl>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
+    <AssemblyVersion>1.1</AssemblyVersion>
+    <FileVersion>1.1</FileVersion>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-    <PackageReleaseNotes>Moved to .NET 7.0 and added rating.</PackageReleaseNotes>
+    <PackageReleaseNotes>Moved to .NET 8.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Anders-H/ImdbScraper</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.0.1</Version>
+    <Version>1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -12,34 +12,24 @@ public class Scraper
     {
         var url = $@"https://www.imdb.com/title/tt{imdbId:0000000}/";
 
-        var result = new DownloadResult
-        {
-            InfrastructureSuccess = false,
-            GrabSuccess = false,
-            Html = ""
-        };
-
         try
         {
-            using (var client = new WebClient())
-            {
-                client.Encoding = Encoding.UTF8;
-                result.Html = client.DownloadString(url);
-            }
-
-            result.InfrastructureSuccess = true;
+            using var client = new WebClient();
+            client.Encoding = Encoding.UTF8;
+            var html = client.DownloadString(url);
+            var infrastructureSuccess = true;
             
-            result.GrabSuccess = !string.IsNullOrEmpty(result.Html)
-                && result.Html.Length > 10000
-                && result.Html.IndexOf(JsonStartTag, StringComparison.Ordinal) > 0;
+            var grabSuccess = !string.IsNullOrEmpty(html)
+                && html.Length > 10000
+                && html.IndexOf(JsonStartTag, StringComparison.Ordinal) > 0;
+
+            return new DownloadResult(infrastructureSuccess, grabSuccess, html);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-
-        return result;
     }
 
     public ScrapeResult Scrape(string html)
@@ -83,10 +73,10 @@ public class Scraper
         }
 
         var url = "";
+
         if (data.TryGetValue("url", StringComparison.CurrentCultureIgnoreCase, out var tempUrl) && !string.IsNullOrWhiteSpace(tempUrl.Value<string>()))
         {
-            var part = tempUrl.Value<string>();
-            url = $"https://www.imdb.com{part}";
+            url = tempUrl.Value<string>();
         }
 
         return new ScrapeResult(true, regionalTitle, originalTitle, year)

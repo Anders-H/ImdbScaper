@@ -1,6 +1,6 @@
 # ImdbScaper
 
-IMDb Scraper is a simple .NET 7.0 library for extracting a movie title, rating and year from a IMDb ID.
+IMDb Scraper is a simple .NET 8 library for extracting a movie title, rating and year from a IMDb ID.
 
 ```
 var repository = new Repository();

@@ -2,9 +2,18 @@
 
 public class DownloadResult
 {
-    public bool InfrastructureSuccess { get; internal set; }
+    public bool InfrastructureSuccess { get; }
+    public bool GrabSuccess { get; }
+    public string Html { get; }
 
-    public bool GrabSuccess { get; internal set; }
+    public DownloadResult() : this(false, false, "")
+    {
+    }
 
-    public string? Html { get; internal set; }
+    public DownloadResult(bool infrastructureSuccess, bool grabSuccess, string html)
+    {
+        InfrastructureSuccess = infrastructureSuccess;
+        GrabSuccess = grabSuccess;
+        Html = html;
+    }
 }
