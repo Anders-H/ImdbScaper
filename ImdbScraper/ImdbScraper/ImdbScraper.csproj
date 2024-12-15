@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -14,7 +14,12 @@
     <RepositoryUrl>https://github.com/Anders-H/ImdbScraper</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>1.1</Version>
+    <ApplicationIcon>imdb_logo_logos_icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="imdb_logo_logos_icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md">

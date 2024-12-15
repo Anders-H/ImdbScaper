@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImdbApp", "ImdbApp\ImdbApp.csproj", "{D16C7E12-FF2C-49C6-812F-82F71DCEEBB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{57F785F4-E817-4D36-8861-C3F2CB746A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57F785F4-E817-4D36-8861-C3F2CB746A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57F785F4-E817-4D36-8861-C3F2CB746A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D16C7E12-FF2C-49C6-812F-82F71DCEEBB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D16C7E12-FF2C-49C6-812F-82F71DCEEBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D16C7E12-FF2C-49C6-812F-82F71DCEEBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D16C7E12-FF2C-49C6-812F-82F71DCEEBB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
