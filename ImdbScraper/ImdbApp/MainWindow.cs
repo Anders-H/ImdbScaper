@@ -41,6 +41,21 @@ public partial class MainWindow : Form
                 cboImdbId.Text = value.ToString();
                 ScrapeMovie();
             }
+
+            return;
+        }
+
+        match = Regex.Match(t, @"[0-9]+");
+
+        if (match.Success)
+        {
+            if (uint.TryParse(t, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
+            {
+                cboImdbId.Text = value.ToString();
+                ScrapeMovie();
+            }
+
+            return;
         }
     }
 
