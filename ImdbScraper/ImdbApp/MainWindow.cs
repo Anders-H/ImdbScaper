@@ -53,16 +53,17 @@ public partial class MainWindow : Form
             return;
 
         _lastSearchedMovie = id;
-        AddIfNotExits(id);
         var movieStatus = _scraper.Download(id);
 
         if (movieStatus.GrabSuccess)
         {
             lblSuccess.Text = @"Yes";
             var scraped = _scraper.Scrape(movieStatus.Html);
+
             if (scraped.Success)
             {
-
+                AddIfNotExits(id);
+                lblScrapeDate.Text = scraped.ScrapeDate!.Value.ToString("yyyy-MM-dd");
             }
             else
             {
@@ -77,7 +78,17 @@ public partial class MainWindow : Form
 
     private void AddIfNotExits(uint movieId)
     {
+        var id = movieId.ToString();
 
+        foreach (var item in cboImdbId.Items)
+        {
+            var i = item as string;
+
+            if (i == id)
+                return;
+        }
+
+        cboImdbId.Items.Add(id);
     }
 
     private void btnGet_Click(object sender, EventArgs e)
@@ -87,6 +98,6 @@ public partial class MainWindow : Form
 
     private void cboImdbId_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-
+        Scrape();
     }
 }
