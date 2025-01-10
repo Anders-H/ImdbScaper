@@ -54,6 +54,7 @@ public class Scraper
             originalTitle = alternateName.Value<string>() ?? "";
 
         short year = 0;
+
         if (data.TryGetValue("datePublished", StringComparison.CurrentCultureIgnoreCase, out var datePublished))
             year = (short)datePublished.Value<DateTime>().Year;
 

@@ -34,4 +34,20 @@ public class ScrapeResult
 
     public static ScrapeResult Fail() =>
         new(false, "", "", null);
+
+    public override string ToString() =>
+        $@"Scrape date:
+{(ScrapeDate.HasValue ? ScrapeDate!.Value.ToShortDateString() : "")}
+
+Regional title:
+{RegionalTitle}
+
+Original title:
+{OriginalTitle}
+
+Year:
+{(Year.HasValue ? Year.Value : "")}
+
+Rating:
+{(Rating.HasValue ? Rating.Value.ToString("n0") : "")}";
 }

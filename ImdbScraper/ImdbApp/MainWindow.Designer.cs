@@ -38,6 +38,8 @@
             btnGet = new Button();
             label3 = new Label();
             textBox1 = new TextBox();
+            lblUrl = new Label();
+            label6 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -113,26 +115,50 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(8, 132);
+            label3.Location = new Point(8, 172);
             label3.Name = "label3";
             label3.Size = new Size(71, 15);
-            label3.TabIndex = 7;
+            label3.TabIndex = 9;
             label3.Text = "Scrape data:";
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(8, 148);
+            textBox1.Location = new Point(8, 188);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
             textBox1.Size = new Size(316, 180);
-            textBox1.TabIndex = 8;
+            textBox1.TabIndex = 10;
+            // 
+            // lblUrl
+            // 
+            lblUrl.AutoSize = true;
+            lblUrl.Cursor = Cursors.Hand;
+            lblUrl.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblUrl.ForeColor = Color.FromArgb(0, 0, 192);
+            lblUrl.Location = new Point(8, 152);
+            lblUrl.Name = "lblUrl";
+            lblUrl.Size = new Size(28, 15);
+            lblUrl.TabIndex = 8;
+            lblUrl.Text = "       ";
+            lblUrl.Click += lblUrl_Click;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(8, 132);
+            label6.Name = "label6";
+            label6.Size = new Size(31, 15);
+            label6.TabIndex = 7;
+            label6.Text = "URL:";
             // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(328, 332);
+            ClientSize = new Size(331, 375);
+            Controls.Add(lblUrl);
+            Controls.Add(label6);
             Controls.Add(textBox1);
             Controls.Add(label3);
             Controls.Add(btnGet);
@@ -162,5 +188,7 @@
         private Button btnGet;
         private Label label3;
         private TextBox textBox1;
+        private Label lblUrl;
+        private Label label6;
     }
 }

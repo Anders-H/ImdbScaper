@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using ImdbScraper;
@@ -7,13 +8,13 @@ namespace ImdbApp;
 public partial class MainWindow : Form
 {
     private uint _lastSearchedMovie;
-    private Scraper _scraper;
+    private readonly Repository _repository;
 
     public MainWindow()
     {
         InitializeComponent();
         _lastSearchedMovie = 0;
-        _scraper = new Scraper();
+        _repository = new Repository();
     }
 
     private void cboImdbId_KeyDown(object sender, KeyEventArgs e)
@@ -45,17 +46,26 @@ public partial class MainWindow : Form
             return;
         }
 
-        match = Regex.Match(t, @"[0-9]+");
+        match = Regex.Match(t, @"([0-9]+)");
 
         if (match.Success)
         {
-            if (uint.TryParse(t, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
+            var valueMatch = match.Groups[1].Value;
+
+            if (uint.TryParse(valueMatch, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
             {
                 cboImdbId.Text = value.ToString();
                 ScrapeMovie();
             }
 
             return;
+        }
+
+        match = Regex.Match(t, @"(rm[0-9]*)");
+
+        if (match.Success)
+        {
+
         }
     }
 
@@ -67,28 +77,52 @@ public partial class MainWindow : Form
         if (_lastSearchedMovie == id)
             return;
 
-        _lastSearchedMovie = id;
-        var movieStatus = _scraper.Download(id);
+        ClearForm();
 
-        if (movieStatus.GrabSuccess)
+        _lastSearchedMovie = id;
+        Cursor = Cursors.WaitCursor;
+        Refresh();
+        var movieStatus = _repository.GetMovie(id);
+        Cursor = Cursors.Default;
+
+        if (movieStatus.IsOk)
         {
             lblSuccess.Text = @"Yes";
-            var scraped = _scraper.Scrape(movieStatus.Html);
+            AddIfNotExits(id);
 
-            if (scraped.Success)
-            {
-                AddIfNotExits(id);
-                lblScrapeDate.Text = scraped.ScrapeDate!.Value.ToString("yyyy-MM-dd");
-            }
-            else
-            {
-                lblSuccess.Text = @"No (successful download, failed scrape)";
-            }
+            lblScrapeDate.Text = movieStatus.ScrapeDate.HasValue
+                ? movieStatus.ScrapeDate.Value.ToString("yyyy-MM-dd")
+                : "";
+            
+            lblUrl.Text = movieStatus.Url;
+            textBox1.Text = movieStatus.ToString();
         }
         else
         {
-            lblSuccess.Text = movieStatus.InfrastructureSuccess ? @"No (infrastructure)" : @"No (parsing)";
+            switch (movieStatus.GetMovieResultStatus)
+            {
+                case GetMovieResultStatus.InfrastructureError:
+                    lblSuccess.Text = @"No (infrastructure error)";
+                    break;
+                case GetMovieResultStatus.GrabError:
+                    lblSuccess.Text = @"No (grab error)";
+                    break;
+                case GetMovieResultStatus.ScrapeError:
+                    lblSuccess.Text = @"No (scrape error)";
+                    break;
+                default:
+                    lblSuccess.Text = @"No (unknown error)";
+                    break;
+            }
         }
+    }
+
+    private void ClearForm()
+    {
+        lblSuccess.Text = "";
+        lblScrapeDate.Text = "";
+        lblUrl.Text = "";
+        textBox1.Text = "";
     }
 
     private void AddIfNotExits(uint movieId)
@@ -114,5 +148,21 @@ public partial class MainWindow : Form
     private void cboImdbId_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
         Scrape();
+    }
+
+    private void lblUrl_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(lblUrl.Text))
+            return;
+
+        try
+        {
+            var url = lblUrl.Text.Replace("&", "^&");
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }
