@@ -61,12 +61,16 @@ public partial class MainWindow : Form
             return;
         }
 
-        match = Regex.Match(t, @"(rm[0-9]*)");
+        match = Regex.Match(t, @"(tt[0-9]+).*(rm[0-9]+)");
 
         if (match.Success)
         {
-
+            ScrapeImage(match.Groups[1].Value, match.Groups[2].Value);
+            return;
         }
+
+        ClearForm();
+        lblSuccess.Text = @"I don't understand.";
     }
 
     private void ScrapeMovie()
@@ -114,6 +118,23 @@ public partial class MainWindow : Form
                     lblSuccess.Text = @"No (unknown error)";
                     break;
             }
+        }
+    }
+
+    private void ScrapeImage(string title, string image)
+    {
+        ClearForm();
+        var url = $"https://www.imdb.com/title/{title}/mediaviewer/{image}";
+        Cursor = Cursors.WaitCursor;
+        Refresh();
+        var img = new ImdbImage(url).GetImage();
+        Cursor = Cursors.Default;
+        Refresh();
+
+        if (img == null)
+        {
+
+            return;
         }
     }
 
