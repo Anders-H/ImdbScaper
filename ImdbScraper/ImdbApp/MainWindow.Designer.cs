@@ -40,6 +40,8 @@
             textBox1 = new TextBox();
             lblUrl = new Label();
             label6 = new Label();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -62,7 +64,6 @@
             cboImdbId.TabIndex = 1;
             cboImdbId.KeyDown += cboImdbId_KeyDown;
             cboImdbId.Leave += cboImdbId_Leave;
-            cboImdbId.Validating += cboImdbId_Validating;
             // 
             // label2
             // 
@@ -152,11 +153,21 @@
             label6.TabIndex = 7;
             label6.Text = "URL:";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(8, 188);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(316, 180);
+            pictureBox1.TabIndex = 11;
+            pictureBox1.TabStop = false;
+            pictureBox1.Visible = false;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(331, 375);
+            Controls.Add(pictureBox1);
             Controls.Add(lblUrl);
             Controls.Add(label6);
             Controls.Add(textBox1);
@@ -173,6 +184,7 @@
             MaximizeBox = false;
             Name = "MainWindow";
             Text = "IMDb App";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -190,5 +202,6 @@
         private TextBox textBox1;
         private Label lblUrl;
         private Label label6;
+        private PictureBox pictureBox1;
     }
 }

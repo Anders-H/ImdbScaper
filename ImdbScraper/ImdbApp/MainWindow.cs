@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using ImdbScraper;
@@ -9,12 +10,14 @@ public partial class MainWindow : Form
 {
     private uint _lastSearchedMovie;
     private readonly Repository _repository;
+    private readonly List<string> _notDeletedFiles;
 
     public MainWindow()
     {
         InitializeComponent();
         _lastSearchedMovie = 0;
         _repository = new Repository();
+        _notDeletedFiles = new List<string>();
     }
 
     private void cboImdbId_KeyDown(object sender, KeyEventArgs e)
@@ -31,7 +34,16 @@ public partial class MainWindow : Form
     private void Scrape()
     {
         var t = cboImdbId.Text.Trim();
-        var match = Regex.Match(t, @"https:\/\/www.imdb.com\/title\/tt([0-9]+).*");
+
+        var match = Regex.Match(t, @"(tt[0-9]+).*(rm[0-9]+)");
+
+        if (match.Success)
+        {
+            ScrapeImage(match.Groups[1].Value, match.Groups[2].Value);
+            return;
+        }
+
+        match = Regex.Match(t, @"https:\/\/www.imdb.com\/title\/tt([0-9]+).*");
 
         if (match.Success)
         {
@@ -58,14 +70,6 @@ public partial class MainWindow : Form
                 ScrapeMovie();
             }
 
-            return;
-        }
-
-        match = Regex.Match(t, @"(tt[0-9]+).*(rm[0-9]+)");
-
-        if (match.Success)
-        {
-            ScrapeImage(match.Groups[1].Value, match.Groups[2].Value);
             return;
         }
 
@@ -127,15 +131,58 @@ public partial class MainWindow : Form
         var url = $"https://www.imdb.com/title/{title}/mediaviewer/{image}";
         Cursor = Cursors.WaitCursor;
         Refresh();
-        var img = new ImdbImage(url).GetImage();
+        var imdbImg = new ImdbImage(url);
+        var img = imdbImg.GetImage(image);
         Cursor = Cursors.Default;
         Refresh();
 
         if (img == null)
         {
-
+            lblSuccess.Text = @"Image scrape failed.";
             return;
         }
+
+        pictureBox1.Image = img;
+        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+        pictureBox1.Visible = true;
+        Refresh();
+        using var x = new SaveFileDialog();
+        x.Title = @"Save scraped jpg image";
+        x.Filter = @"*.jpg|*.jpg";
+        x.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        x.FileName = imdbImg.SuggestFilename();
+
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        var parameters = new EncoderParameters(1);
+        parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
+        var encoder = ImageCodecInfo.GetImageDecoders().FirstOrDefault(x => x.FormatID == ImageFormat.Jpeg.Guid);
+
+        if (encoder == null)
+        {
+            pictureBox1.Image = null;
+            pictureBox1.Visible = false;
+            Refresh();
+            MessageBox.Show(this, @"Failed to get encoder.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        try
+        {
+            img.Save(x.FileName, encoder, parameters);
+        }
+        catch
+        {
+            MessageBox.Show(this, @"Save failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        pictureBox1.Image = null;
+        pictureBox1.Visible = false;
+        Refresh();
+        //TODO: Spara i listan över filer att radera om misslyckas.
+        imdbImg.DeleteTempImage();
     }
 
     private void ClearForm()
@@ -162,11 +209,6 @@ public partial class MainWindow : Form
     }
 
     private void btnGet_Click(object sender, EventArgs e)
-    {
-        Scrape();
-    }
-
-    private void cboImdbId_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
         Scrape();
     }
